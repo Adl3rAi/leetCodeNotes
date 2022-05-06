@@ -517,9 +517,9 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 
 | Difficulty |                           LeetCode                           | Note |
 | :--------: | :----------------------------------------------------------: | :--: |
-|     🟢      | [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) |      |
-|     🟠      | [92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/) |      |
-|     🔴      | [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) |      |
+|     🟢      | [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) |  [206. Reverse Linked List](#206-reverse-linked-list)    |
+|     🟠      | [92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/) |  [92. Reverse Linked List II](#92-reverse-linked-list-ii)    |
+|     🔴      | [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) |   [25. Reverse Nodes in k-Group](#25-reverse-nodes-in-k-group)   |
 
 ### 206. Reverse Linked List
 
