@@ -1,8 +1,8 @@
 # Array
 
-| [preSum](#presum) |
+| Type |
 | :----: |
-|        |
+|  [preSum](#presum)      |
 
 
 
