@@ -1,5 +1,12 @@
 # Linked List
 
+| Type |
+| :----------------: |
+| [Single Linked List](#single-linked-list) |
+| [Reverse the Linked List](#reverse-the-linked-list) |
+
+
+
 ## Single Linked List
 
 | Difficulty |                           LeetCode                           |                           Note                           |
