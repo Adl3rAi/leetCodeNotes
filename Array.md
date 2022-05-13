@@ -844,5 +844,208 @@ public:
 
 ## Binary Search
 
+| Difficulty |                           LeetCode                           | Note |
+| :--------: | :----------------------------------------------------------: | :--: |
+|     🟢      | [704. Binary Search](https://leetcode.com/problems/binary-search/) | [704. Binary Search](#704-binary-search)     |
+|     🟠      | [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) |[34. Find First and Last Position of Element in Sorted Array](#34-find-first-and-last-position-of-element-in-sorted-array)      |
 
+### 704. Binary Search
+
+Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, then return its index. Otherwise, return `-1`.
+
+You must write an algorithm with `O(log n)` runtime complexity.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [-1,0,3,5,9,12], target = 9
+Output: 4
+Explanation: 9 exists in nums and its index is 4
+```
+
+**Example 2:**
+
+```
+Input: nums = [-1,0,3,5,9,12], target = 2
+Output: -1
+Explanation: 2 does not exist in nums so return -1
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= nums.length <= 104`
+- `-104 < nums[i], target < 104`
+- All the integers in `nums` are **unique**.
+- `nums` is sorted in ascending order.
+
+---
+
+```cpp
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int left = 0;
+        int right = nums.size() - 1;
+        while(left <= right) {
+            int mid = (right + left) / 2;
+            if(nums[mid] == target) {
+                return mid;
+            }
+            else if(nums[mid] < target) {
+                left = mid + 1;
+            }
+            else if(nums[mid] > target) {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+};
+```
+
+Notice the operator of the search range
+
+左侧边界`return`有多少个元素`int`小于`target`
+
+```cpp
+int left_bound(vector<int>& nums, int target){
+  if(nums.size() == 0) return -1;
+  int left = 0;
+ 	int right = nums.size();
+  while(left < right) {
+    int mid = (left + right) / 2;
+    if(nums[mid] == target) {
+      right = mid; // 找到 target 时不要立即返回，而是缩小「搜索区间」的上界 right，在区间 [left, mid) 中											 继续搜索，即不断向左收缩，达到锁定左侧边界的目的。
+    }
+    else if(nums[mid] < target) {
+      left = mid + 1; // 「搜索区间」是 [left, right) 左闭右开，所以当 nums[mid] 被检测之后，下一步应该														去 mid 的左侧或者右侧区间搜索，即 [left, mid) 或 [mid + 1, right)
+    }
+    else if(nums[mid] > target) {
+      right = mid;
+    }
+  }
+  return left;
+}
+```
+
+右边界同理
+
+```cpp
+int rightBound(vector<int>& nums, int target) {
+    if (nums.length == 0) return -1;
+    int left = 0, right = nums.length;
+    
+    while (left < right) {
+        int mid = (right + left) / 2;
+        if (nums[mid] == target) {
+            left = mid + 1; // mid = left - 1;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else if (nums[mid] > target) {
+            right = mid;
+        }
+    }
+    return left - 1; // 对 left 的更新必须是 left = mid + 1，就是说 while 循环结束时，nums[left] 一定												不等于 target 了，而 nums[left-1] 可能是 target。
+}
+```
+
+### 34. Find First and Last Position of Element in Sorted Array
+
+Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value.
+
+If `target` is not found in the array, return `[-1, -1]`.
+
+You must write an algorithm with `O(log n)` runtime complexity.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+```
+
+**Example 2:**
+
+```
+Input: nums = [5,7,7,8,8,10], target = 6
+Output: [-1,-1]
+```
+
+**Example 3:**
+
+```
+Input: nums = [], target = 0
+Output: [-1,-1]
+```
+
+ 
+
+**Constraints:**
+
+- `0 <= nums.length <= 105`
+- `-109 <= nums[i] <= 109`
+- `nums` is a non-decreasing array.
+- `-109 <= target <= 109`
+
+---
+
+```cpp
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res;
+        if(count(nums.begin(), nums.end(), target)) {
+            int i = leftBound(nums, target);
+            int j = rightBound(nums, target);
+            res.push_back(i);
+            res.push_back(j);
+        }
+        else {
+            res.push_back(-1);
+            res.push_back(-1);
+        }
+        return res;
+    }
+    int leftBound(vector<int>& nums, int target) {
+        int left = 0;
+        int right = nums.size();
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(nums[mid] == target) {
+                right = mid;
+            }
+            else if(nums[mid] > target) {
+                right = mid;
+            }
+            else if(nums[mid] < target) {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    int rightBound(vector<int>& nums, int target) {
+        int left = 0;
+        int right = nums.size();
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(nums[mid] == target) {
+                left = mid+1;
+            }
+            else if(nums[mid] > target) {
+                right = mid;
+            }
+            else if(nums[mid] < target) {
+                left = mid+1;
+            }
+        }
+        return left-1;
+    }
+};
+```
 
