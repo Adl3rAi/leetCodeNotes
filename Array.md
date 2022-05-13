@@ -4,6 +4,8 @@
 | :----: |
 |  [preSum](#presum)      |
 | [diff array](#diff-array) |
+| [rotate matrix](#rotate-matrix-or-spiral-matrix) |
+| [sliding window](#sliding-window) |
 
 
 
@@ -532,10 +534,10 @@ public:
 
 | Difficulty |                           LeetCode                           | Note |
 | :--------: | :----------------------------------------------------------: | :--: |
-|     🔴      | [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) |      |
-|     🟠      |                                                              |      |
-|     🟠      |                                                              |      |
-|     🟠      |                                                              |      |
+|     🔴      | [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) | [76. Minimum Window Substring](#76-minimum-window-substring)     |
+|     🟠      | [567. Permutation in String](https://leetcode.com/problems/permutation-in-string/) |[567. Permutation in String](#567-permutation-in-string)      |
+|     🟠      | [438. Find Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/) |[438. Find Anagrams in a String](#438-find-all-anagrams-in-string)      |
+|     🟠      | [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) |[3. Longest Substring Without Repeating Characters](#3-longest-substring-without-repeating-characters)      |
 
 ### 76. Minimum Window Substring
 
@@ -584,13 +586,263 @@ Since the largest window of s only has one 'a', return empty string.
 ---
 
 ```cpp
+class Solution {
+  public:
+  	string minWindow(string s, string t) {
+      map<char, int> need;
+      map<char, int> window;
+      for(char c : t) {
+        need[c]++;
+      }
+      int left = 0;
+      int right = 0;
+      int valid = 0;
+      int start = 0;
+      int len = INT_MAX;
+      while(right < s.size()) {
+        char c = s[right];
+        if(need.count(c)) {
+          window[c]++;
+          if(window[c] == need[c]) {
+            valid++;
+          }
+        }
+        while(valid == need.size()) {
+          if(right - left < len) {
+            start = left;
+            len = right - left;
+          }
+          char d = s[left];
+          left++;
+          if(need.count(d)) {
+            if(window[d] == need[d]) {
+              valid--;
+            }
+            window[d]--;
+          }
+        }
+      }
+      return len == INT_MAX ? "" : s.substr(start, len);
+    }
+};
 ```
 
+### 567. Permutation in String
 
+Given two strings `s1` and `s2`, return `true` *if* `s2` *contains a permutation of* `s1`*, or* `false` *otherwise*.
 
+In other words, return `true` if one of `s1`'s permutations is the substring of `s2`.
 
+ 
 
+**Example 1:**
 
+```
+Input: s1 = "ab", s2 = "eidbaooo"
+Output: true
+Explanation: s2 contains one permutation of s1 ("ba").
+```
+
+**Example 2:**
+
+```
+Input: s1 = "ab", s2 = "eidboaoo"
+Output: false
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= s1.length, s2.length <= 104`
+- `s1` and `s2` consist of lowercase English letters.
+
+---
+
+```cpp
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        map<char, int> need;
+        map<char, int> window;
+        for(char c : s1) {
+            need[c]++;
+        }
+        int left = 0;
+        int right = 0;
+        int valid = 0;
+        while(right < s2.size()) {
+            char c = s2[right];
+            right++;
+            if(need.count(c)) {
+                window[c]++;
+                if(window[c] == need[c]) {
+                    valid++;
+                }
+            }
+            while(right - left >= s1.size()) {
+                if(valid == need.size()) {
+                    return true;
+                }
+                char d = s2[left];
+                left++;
+                if(need.count(d)) {
+                    if(window[d] == need[d]) {
+                        valid--;
+                    }
+                    window[d]--;
+                }
+            }
+        }
+        return false;
+    }
+};
+```
+
+### 438. Find All Anagrams in String
+
+Given two strings `s` and `p`, return *an array of all the start indices of* `p`*'s anagrams in* `s`. You may return the answer in **any order**.
+
+An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "cbaebabacd", p = "abc"
+Output: [0,6]
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+```
+
+**Example 2:**
+
+```
+Input: s = "abab", p = "ab"
+Output: [0,1,2]
+Explanation:
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= s.length, p.length <= 3 * 104`
+- `s` and `p` consist of lowercase English letters.
+
+---
+
+```cpp
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        map<char, int> need;
+        map<char, int> window;
+        vector<int> res;
+        for(char c : p) {
+            need[c]++;
+        }
+        int left = 0;
+        int right = 0;
+        int valid = 0;
+        while(right < s.size()) {
+            char c = s[right];
+            right++;
+            if(need.count(c)) {
+                window[c]++;
+                if(window[c] == need[c]) {
+                    valid++;
+                }
+            }
+            while(right - left >= p.size()) {
+                if(valid == need.size()) {
+                    res.push_back(left);
+                }
+                char d = s[left];
+                left++;
+                if(need.count(d)) {
+                    if(window[d] == need[d]) {
+                        valid--;
+                    }
+                    window[d]--;
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+### 3. Longest Substring Without Repeating Characters
+
+Given a string `s`, find the length of the **longest substring** without repeating characters.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+```
+
+**Example 2:**
+
+```
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+```
+
+**Example 3:**
+
+```
+Input: s = "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+```
+
+ 
+
+**Constraints:**
+
+- `0 <= s.length <= 5 * 104`
+- `s` consists of English letters, digits, symbols and spaces.
+
+---
+
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        map<char, int> window;
+        int left = 0;
+        int right = 0;
+        int res = 0;
+        while(right < s.size()) {
+            char c = s[right];
+            right++;
+            window[c]++;
+            while(window[c] > 1) {
+                char d = s[left];
+                left++;
+                window[d]--;
+            }
+            res = max(res, right - left);
+        }
+        return res;
+    }
+};
+```
+
+## Binary Search
 
 
 
