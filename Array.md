@@ -6,6 +6,8 @@
 | [diff array](#diff-array) |
 | [rotate matrix](#rotate-matrix-or-spiral-matrix) |
 | [sliding window](#sliding-window) |
+| [binary search](#binary-search) |
+| 田忌赛马问题 |
 
 
 
@@ -844,10 +846,13 @@ public:
 
 ## Binary Search
 
-| Difficulty |                           LeetCode                           | Note |
-| :--------: | :----------------------------------------------------------: | :--: |
-|     🟢      | [704. Binary Search](https://leetcode.com/problems/binary-search/) | [704. Binary Search](#704-binary-search)     |
-|     🟠      | [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) |[34. Find First and Last Position of Element in Sorted Array](#34-find-first-and-last-position-of-element-in-sorted-array)      |
+| Difficulty |                           LeetCode                           |                             Note                             |
+| :--------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|     🟢      | [704. Binary Search](https://leetcode.com/problems/binary-search/) |           [704. Binary Search](#704-binary-search)           |
+|     🟠      | [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) | [34. Find First and Last Position of Element in Sorted Array](#34-find-first-and-last-position-of-element-in-sorted-array) |
+|     🟠      | [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) |[875. Koko Eating Bananas](#875-koko-eating-bananas)                                                              |
+|     🟠      | [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/) |[1011. Capacity To Ship Packages Within D Days](#1011-capacity-to-ship-packages-within-d-days)                                                              |
+|     🔴      | [410. Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/) |[410. Split Array Largest Sum](#410-split-array-largest-sum)                                                              |
 
 ### 704. Binary Search
 
@@ -1045,6 +1050,329 @@ public:
             }
         }
         return left-1;
+    }
+};
+```
+
+### 875. Koko Eating Bananas
+
+Koko loves to eat bananas. There are `n` piles of bananas, the `ith` pile has `piles[i]` bananas. The guards have gone and will come back in `h` hours.
+
+Koko can decide her bananas-per-hour eating speed of `k`. Each hour, she chooses some pile of bananas and eats `k` bananas from that pile. If the pile has less than `k` bananas, she eats all of them instead and will not eat any more bananas during this hour.
+
+Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+
+Return *the minimum integer* `k` *such that she can eat all the bananas within* `h` *hours*.
+
+ 
+
+**Example 1:**
+
+```
+Input: piles = [3,6,7,11], h = 8
+Output: 4
+```
+
+**Example 2:**
+
+```
+Input: piles = [30,11,23,4,20], h = 5
+Output: 30
+```
+
+**Example 3:**
+
+```
+Input: piles = [30,11,23,4,20], h = 6
+Output: 23
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= piles.length <= 104`
+- `piles.length <= h <= 109`
+- `1 <= piles[i] <= 109`
+
+---
+
+
+```cpp
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int left = 1;
+        int right = 1000000000 + 1;
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(f(piles, mid) <= h) {
+                right = mid;
+            }
+            else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    int f(vector<int>& piles, int x) {
+        int hours = 0;
+        for(int i = 0; i < piles.size(); i++) {
+            hours += piles[i] / x;
+            if(piles[i] % x > 0) {
+                hours++;
+            }
+        }
+        return hours;
+    }
+};
+```
+
+### 1011. Capacity To Ship Packages Within D Days
+
+A conveyor belt has packages that must be shipped from one port to another within `days` days.
+
+The `ith` package on the conveyor belt has a weight of `weights[i]`. Each day, we load the ship with packages on the conveyor belt (in the order given by `weights`). We may not load more weight than the maximum weight capacity of the ship.
+
+Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within `days` days.
+
+ 
+
+**Example 1:**
+
+```
+Input: weights = [1,2,3,4,5,6,7,8,9,10], days = 5
+Output: 15
+Explanation: A ship capacity of 15 is the minimum to ship all the packages in 5 days like this:
+1st day: 1, 2, 3, 4, 5
+2nd day: 6, 7
+3rd day: 8
+4th day: 9
+5th day: 10
+
+Note that the cargo must be shipped in the order given, so using a ship of capacity 14 and splitting the packages into parts like (2, 3, 4, 5), (1, 6, 7), (8), (9), (10) is not allowed.
+```
+
+**Example 2:**
+
+```
+Input: weights = [3,2,2,4,1,4], days = 3
+Output: 6
+Explanation: A ship capacity of 6 is the minimum to ship all the packages in 3 days like this:
+1st day: 3, 2
+2nd day: 2, 4
+3rd day: 1, 4
+```
+
+**Example 3:**
+
+```
+Input: weights = [1,2,3,1,1], days = 4
+Output: 3
+Explanation:
+1st day: 1
+2nd day: 2
+3rd day: 3
+4th day: 1, 1
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= days <= weights.length <= 5 * 104`
+- `1 <= weights[i] <= 500`
+
+---
+
+```cpp
+class Solution {
+public:
+    int shipWithinDays(vector<int>& weights, int days) {
+        int left = 0;
+        int right = 1;
+        for(int w : weights) {
+            left = max(left, w);
+            right += w;
+        }
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(f(weights, mid) <= days) {
+                right = mid;
+            }
+            else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    
+    int f(vector<int>& weights, int x) {
+        int days = 1;
+        int load = 0;
+        for(int i = 0; i < weights.size(); i++) {
+            load += weights[i];
+            if(load > x) {
+                days++;
+                load = weights[i];
+            }
+        }
+        return days;
+    }
+};
+```
+
+### 410. Split Array Largest Sum
+
+Given an array `nums` which consists of non-negative integers and an integer `m`, you can split the array into `m` non-empty continuous subarrays.
+
+Write an algorithm to minimize the largest sum among these `m` subarrays.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [7,2,5,10,8], m = 2
+Output: 18
+Explanation:
+There are four ways to split nums into two subarrays.
+The best way is to split it into [7,2,5] and [10,8],
+where the largest sum among the two subarrays is only 18.
+```
+
+**Example 2:**
+
+```
+Input: nums = [1,2,3,4,5], m = 2
+Output: 9
+```
+
+**Example 3:**
+
+```
+Input: nums = [1,4,4], m = 3
+Output: 4
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= nums.length <= 1000`
+- `0 <= nums[i] <= 106`
+- `1 <= m <= min(50, nums.length)`
+
+---
+
+```cpp
+class Solution {
+public:
+    int splitArray(vector<int>& nums, int m) {
+        int left = 0;
+        int right = 1;
+        for(int n : nums) {
+            left = max(left, n);
+            right += n;
+        }
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(f(nums,mid) <= m) {
+                right = mid;
+            }
+            else {
+                left = mid + 1;
+            }
+        }
+        return left;  
+    }
+    int f(vector<int>& nums, int x) {
+        int cnt = 1;
+        int sum = 0;
+        for(int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+            if(sum > x) {
+                cnt++;
+                sum = nums[i];
+            }
+        }
+        return cnt;
+    }
+};
+```
+
+## 田忌赛马问题
+
+| Difficulty |                           LeetCode                           | Note |
+| :--------: | :----------------------------------------------------------: | :--: |
+|     🟠      | [870. Advantage Shuffle](https://leetcode.com/problems/advantage-shuffle/) |[870. Advantage Shuffle](#870-advantage-shuffle)      |
+
+### 870. Advantage Shuffle
+
+You are given two integer arrays `nums1` and `nums2` both of the same length. The **advantage** of `nums1` with respect to `nums2` is the number of indices `i` for which `nums1[i] > nums2[i]`.
+
+Return *any permutation of* `nums1` *that maximizes its **advantage** with respect to* `nums2`.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums1 = [2,7,11,15], nums2 = [1,10,4,11]
+Output: [2,11,7,15]
+```
+
+**Example 2:**
+
+```
+Input: nums1 = [12,24,8,32], nums2 = [13,25,32,11]
+Output: [24,32,8,12]
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= nums1.length <= 105`
+- `nums2.length == nums1.length`
+- `0 <= nums1[i], nums2[i] <= 109`
+
+---
+
+```cpp
+class Solution {
+public:
+    struct cmp {
+        bool operator()(const vector<int>& pair1, const vector<int>& pair2) {
+            return pair2[1] > pair1[1];
+        }
+    };
+    vector<int> advantageCount(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        priority_queue<vector<int>, vector<vector<int>>, cmp> pq;
+        for(int i = 0; i < n; i++) {
+            vector<int> v = {i, nums2[i]};
+            pq.push(v);
+        }
+        sort(nums1.begin(), nums1.end());
+        int left = 0;
+        int right = n-1;
+        vector<int> res(n);
+        while(!pq.empty()) {
+            vector<int> top = pq.top();
+            pq.pop();
+            int i = top[0];
+            int max = top[1];
+            if(max < nums1[right]) {
+                res[i] = nums1[right];
+                right--;
+            }
+            else {
+                res[i] = nums1[left];
+                left++;
+            }
+        }
+        return res;
     }
 };
 ```
