@@ -7,7 +7,7 @@
 | [rotate matrix](#rotate-matrix-or-spiral-matrix) |
 | [sliding window](#sliding-window) |
 | [binary search](#binary-search) |
-| 田忌赛马问题 |
+| [田忌赛马问题](#田忌赛马问题) |
 
 
 
