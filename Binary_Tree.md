@@ -10,13 +10,14 @@
 
 | Difficulty |                           LeetCode                           | Note |
 | :--------: | :----------------------------------------------------------: | :--: |
-|     🟢      | [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) |      |
-|     🟢      | [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/) |      |
-|     🟢      | [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/) |      |
-|     🔴      | [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) |      |
-|     🟢      | [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/) |      |
-|     🟠      | [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/) |      |
-|     🟠      | [114. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/) |      |
+|     🟢      | [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) |[104. Maximum Depth of Binary Tree](#104-maximum-depth-of-binary-tree)      |
+|     🟢      | [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/) |[144. Binary Tree Preorder Traversal](#144-binary-tree-preorder-traversal)      |
+|     🟢      | [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/) |[543. Diameter of Binary Tree](#543-diameter-of-binary-tree)      |
+|     🔴      | [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) |[124. Binary Tree Maximum Path Sum](#124-binary-tree-maximum-path-sum)      |
+|     🟢      | [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/) |[226. Invert Binary Tree](#226-invert-binary-tree)      |
+|     🟠      | [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/) |[116. Populating Next Right Pointers in Each Node](#116-populating-next-right-pointers-in-each-node)      |
+|     🟠      | [114. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/) |[114. Flatten Binary Tree to Linked List](#114-flatten-binary-tree-to-linked-list)      |
+|     🟠      | [652. Find Duplicate Subtree](https://leetcode.com/problems/find-duplicate-subtrees/) |[652. Find Duplicate Subtree](#652-find-duplicate-subtree)      |
 
 **是否能够通过一次遍历得到答案？**
 
@@ -422,14 +423,90 @@ class Solution {
 }
 ```
 
+---
+
+### 652. Find Duplicate Subtree
+
+Given the `root` of a binary tree, return all **duplicate subtrees**.
+
+For each kind of duplicate subtrees, you only need to return the root node of any **one** of them.
+
+Two trees are **duplicate** if they have the **same structure** with the **same node values**.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2020/08/16/e1.jpg)
+
+```
+Input: root = [1,2,3,4,null,2,4,null,null,4]
+Output: [[2,4],[4]]
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2020/08/16/e2.jpg)
+
+```
+Input: root = [2,1,1]
+Output: [[1]]
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2020/08/16/e33.jpg)
+
+```
+Input: root = [2,2,2,3,null,3,null]
+Output: [[2,3],[3]]
+```
+
+ 
+
+**Constraints:**
+
+- The number of the nodes in the tree will be in the range `[1, 10^4]`
+- `-200 <= Node.val <= 200`
+
+```cpp
+class Solution {
+public:
+    map<string,int> memo;
+    vector<TreeNode*> res;
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        string subTree = traverse(root);
+        return res;
+    }
+    string traverse(TreeNode* root) {
+        if(root == nullptr) return "#";
+        string left = traverse(root->left);
+        string right = traverse(root->right);
+        string subTree = left + "," + right + "," + to_string(root->val);
+        int freq;
+        if(!memo.count(subTree)) {
+            freq = 0;
+        }
+        else {
+            freq = memo[subTree];
+        }
+        if(freq == 1) {
+            res.push_back(root);
+        }
+        memo[subTree] = freq + 1;
+        return subTree;
+    }
+};
+```
+
 ## Binary Tree Build
 
 | Difficulty |                           LeetCode                           | Note |
 | :--------: | :----------------------------------------------------------: | :--: |
-|     🟠      | [654. Maximum Binary Tree](https://leetcode.com/problems/maximum-binary-tree/) |      |
-|     🟠      | [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/) |      |
-|     🟠      | [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/) |      |
-|     🟠      | [889. Construct Binary Tree from Preorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/) |      |
+|     🟠      | [654. Maximum Binary Tree](https://leetcode.com/problems/maximum-binary-tree/) |[654. Maximum Binary Tree](#654-maximum-binary-tree)      |
+|     🟠      | [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/) |[105. Construct Binary Tree from Preorder and Inorder Traversal](#105-construct-binary-tree-from-preorder-and-inorder-traversal)      |
+|     🟠      | [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/) |[106. Construct Binary Tree from Inorder and Postorder Traversal](#106-construct-binary-tree-from-inorder-and-postorder-traversal)      |
+|     🟠      | [889. Construct Binary Tree from Preorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/) |[889. Construct Binary Tree from Preorder and Postorder Traversal](#889-construct-binary-tree-from-preorder-and-postorder-traversal)      |
 
 **构造整棵树 = 根节点 + 构造左子树 + 构造右子树**
 
@@ -700,4 +777,3 @@ public:
     }
 };
 ```
-
