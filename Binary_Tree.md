@@ -780,6 +780,187 @@ public:
 
 ---
 
+## Binary Search Tree Basics
+
+| Difficulty |                           LeetCode                           | Note |
+| :--------: | :----------------------------------------------------------: | :--: |
+|     🟠      | [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) |      |
+|     🟠      | [538. Convert BST to Greater Tree](https://leetcode.com/problems/convert-bst-to-greater-tree/) |      |
+|     🟠      | [1038. Binary Search Tree to Greater Sum Tree](https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/) |      |
+
+### 230. Kth Smallest Element in a BST
+
+Given the `root` of a binary search tree, and an integer `k`, return *the* `kth` *smallest value (**1-indexed**) of all the values of the nodes in the tree*.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg)
+
+```
+Input: root = [3,1,4,null,2], k = 1
+Output: 1
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/01/28/kthtree2.jpg)
+
+```
+Input: root = [5,3,6,2,4,null,null,1], k = 3
+Output: 3
+```
+
+ 
+
+**Constraints:**
+
+- The number of nodes in the tree is `n`.
+- `1 <= k <= n <= 104`
+- `0 <= Node.val <= 104`
+
+```cpp
+class Solution {
+  public:
+  int kthSmallest(TreeNode* root, int k) {
+    traverse(root, k);
+    return res;
+  }
+  int res = 0;
+  int rank = 0;
+  void traverse(TreeNode* root, int k) {
+    if(root == nullptr) return;
+    traverse(root->left, k);
+    rank++;
+    if(k == rank) {
+      res = root->val;
+      return;
+    }
+    traverse(root->right, k);
+  }
+}
+```
+
+---
+
+### 538. Convert BST to Greater Tree
+
+Given the `root` of a Binary Search Tree (BST), convert it to a Greater Tree such that every key of the original BST is changed to the original key plus the sum of all keys greater than the original key in BST.
+
+As a reminder, a *binary search tree* is a tree that satisfies these constraints:
+
+- The left subtree of a node contains only nodes with keys **less than** the node's key.
+- The right subtree of a node contains only nodes with keys **greater than** the node's key.
+- Both the left and right subtrees must also be binary search trees.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2019/05/02/tree.png)
+
+```
+Input: root = [4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+Output: [30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]
+```
+
+**Example 2:**
+
+```
+Input: root = [0,null,1]
+Output: [1,null,1]
+```
+
+ 
+
+**Constraints:**
+
+- The number of nodes in the tree is in the range `[0, 104]`.
+- `-104 <= Node.val <= 104`
+- All the values in the tree are **unique**.
+- `root` is guaranteed to be a valid binary search tree.
+
+```cpp
+class Solution {
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        traverse(root);
+        return root;
+    }
+    int sum = 0;
+    void traverse(TreeNode* root) {
+        if(root == nullptr) return;
+        traverse(root->right);
+        sum += root->val;
+        root->val = sum;
+        traverse(root->left);
+    }
+};
+```
+
+---
+
+### 1038. Binary Search Tree to Greater Sum Tree
+
+Given the `root` of a Binary Search Tree (BST), convert it to a Greater Tree such that every key of the original BST is changed to the original key plus the sum of all keys greater than the original key in BST.
+
+As a reminder, a *binary search tree* is a tree that satisfies these constraints:
+
+- The left subtree of a node contains only nodes with keys **less than** the node's key.
+- The right subtree of a node contains only nodes with keys **greater than** the node's key.
+- Both the left and right subtrees must also be binary search trees.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2019/05/02/tree.png)
+
+```
+Input: root = [4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+Output: [30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]
+```
+
+**Example 2:**
+
+```
+Input: root = [0,null,1]
+Output: [1,null,1]
+```
+
+ 
+
+**Constraints:**
+
+- The number of nodes in the tree is in the range `[1, 100]`.
+- `0 <= Node.val <= 100`
+- All the values in the tree are **unique**.
+
+```cpp
+class Solution {
+public:
+    TreeNode* bstToGst(TreeNode* root) {
+        traverse(root);
+        return root;
+    }
+    int sum = 0;
+    void traverse(TreeNode* root) {
+        if(root == nullptr) return;
+        traverse(root->right);
+        sum += root->val;
+        root->val = sum;
+        traverse(root->left);
+    }
+};
+```
+
+
+
+
+
+
+
 ## Merge Sort
 
 | Difficulty |                           LeetCode                           | Note |
@@ -847,6 +1028,8 @@ class Merge {
   }
 }
 ```
+
+---
 
 ### 912. Sort an Array
 
@@ -1206,6 +1389,167 @@ private:
                 nums[p] = temp[j++];
             }
         }
+    }
+};
+```
+
+---
+
+## Quick Sort
+| Difficulty |                           LeetCode                           | Note |
+| :--------: | :----------------------------------------------------------: | :--: |
+|     🟠      | [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) | [215. Kth Largest Element in an Array](#215-kth-largest-element-in-an-array)     |
+
+
+```cpp
+void sort(vector<int>& nums, int lo, int hi) {
+  if(lo >= hi) return;
+  // 切分nums, um nums[lo..p-1] <= nums[p] < nums[p+1..hi] zu erreichen
+  int p = partition(nums, lo, hi);
+  sort(nums, lo, p - 1);
+  sort(nums, p + 1, hi);
+}
+// 本质上，就是二叉树的前序遍历
+// 或者说， 快速排序本质上是一个构建搜索二叉树的过程
+```
+
+```cpp
+class Quick {
+public:
+    void sort(vector<int>& nums) {
+        shuffle(nums);
+        sort(nums, 0, nums.size()-1);
+    }
+private:
+    void sort(vector<int>& nums, int lo, int hi) {
+        if(lo >= hi) return;
+        int p = partition(nums, lo, hi);
+        sort(nums, lo, p - 1);
+        sort(nums, p + 1, hi);
+    }
+    int partition(vector<int>& nums, int lo, int hi) {
+        int pivot = nums[lo];
+        int i = lo + 1;
+        int j = hi;
+        while(i <= j) {
+            while( i < hi && nums[i] <= pivot) {
+                i++;
+            }
+            while( j > lo && nums[j] > pivot ) {
+                j--;
+            }
+            if(i >= j) {
+                break;
+            }
+            swap(nums, i, j);
+        }
+        swap(nums, lo, j);
+        return j;
+    }
+    void shuffle(vector<int>& nums) {
+        int n = nums.size();
+        for(int i = 0; i < n; i++) {
+            int r = i + rand() % (n - i);
+            swap(nums, i, r);
+        }
+    }
+    void swap(vector<int>& nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+};
+class Solution {
+public:
+    vector<int> sortArray(vector<int>& nums) {
+        Quick quick;
+        quick.sort(nums);
+        return nums;
+    }
+};
+```
+
+### 215. Kth Largest Element in an Array
+
+Given an integer array `nums` and an integer `k`, return *the* `kth` *largest element in the array*.
+
+Note that it is the `kth` largest element in the sorted order, not the `kth` distinct element.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+```
+
+**Example 2:**
+
+```
+Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+Output: 4
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= k <= nums.length <= 104`
+- `-104 <= nums[i] <= 104`
+
+```cpp
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        shuffle(nums);
+        int lo = 0;
+        int hi = nums.size() - 1;
+        k = nums.size() - k;
+        while(lo <= hi) {
+            int p = partition(nums, lo, hi);
+            if(p < k) {
+                lo = p + 1;
+            }
+            else if(p > k) {
+                hi = p - 1;
+            }
+            else {
+                return nums[p];
+            }
+        }
+        return -1;
+    }
+    int partition(vector<int>& nums, int lo, int hi) {
+        int pivot = nums[lo];
+        int i = lo + 1;
+        int j = hi;
+        while(i <= j) {
+            while(i < hi && nums[i] <= pivot) {
+                i++;
+            }
+            while(j > lo && nums[j] > pivot) {
+                j--;
+            }
+            if(i >= j) {
+                break;
+            }
+            swap(nums, i, j);
+        }
+        swap(nums, lo, j);
+        return j;
+    }
+    void shuffle(vector<int>& nums) {
+        int n = nums.size();
+        for(int i = 0; i < n; i++) {
+            int r = i + rand() % (n - i);
+            swap(nums, i, r);
+        }
+    }
+    void swap(vector<int>& nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 };
 ```
