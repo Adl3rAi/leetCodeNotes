@@ -965,7 +965,7 @@ public:
 
 | Difficulty |                           LeetCode                           | Note |
 | :--------: | :----------------------------------------------------------: | :--: |
-|     🟠      | [912. Sort an Array](#https://leetcode.com/problems/sort-an-array/) |[912. Sort an Array](#912-sort-an-array)      |
+|     🟠      | [912. Sort an Array](https://leetcode.com/problems/sort-an-array/) |[912. Sort an Array](#912-sort-an-array)      |
 |     🔴      | [315. Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) |[315. Count of Smaller Numbers After Self](#315-count-of-smaller-numbers-after-self)      |
 |     🔴      | [493. Reverse Pairs](https://leetcode.com/problems/reverse-pairs/) |[493. Reverse Pairs](#493-reverse-the-pairs)      |
 |     🔴      | [327. Count of Range Sum](https://leetcode.com/problems/count-of-range-sum/) |[327. Count of Range Sum](#327-count-of-range-sum)      |
@@ -1550,6 +1550,100 @@ public:
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+};
+```
+
+---
+
+## Lowest Common Ancestor
+
+| Difficulty |                           LeetCode                           | Note |
+| :--------: | :----------------------------------------------------------: | :--: |
+|     🟠      | [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/) |[236. Lowest Common Ancestor of a Binary Tree](#236-lowest-common-ancestor-of-a-binary-tree)      |
+
+**What is Lowest Common Ancestor?**
+
+```mermaid
+graph TB;
+3-->5;
+3-->1;
+5-->6;
+5-->2;
+2-->7;
+2-->4;
+1-->0;
+1-->8
+```
+
+**1、**假设两个节点的值分别为6和7，那么该两个节点的LCA节点为5
+
+**2、**假设两个节点的值分别为5和4，那么该两个节点的LCA节点仍为5
+
+可以定义出一个`TreeNode* find(TreeNode* root, int val1, int val2)`函数，找到目标值节点，只要`root`的`find(root->left)`和`find(root->right)`均非空，则说明`root`为LCA节点，而且目标是最低节点，则非空判断应处于后序位置
+
+### 236. Lowest Common Ancestor of a Binary Tree
+
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the [definition of LCA on Wikipedia](https://en.wikipedia.org/wiki/Lowest_common_ancestor): “The lowest common ancestor is defined between two nodes `p` and `q` as the lowest node in `T` that has both `p` and `q` as descendants (where we allow **a node to be a descendant of itself**).”
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2018/12/14/binarytree.png)
+
+```
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of nodes 5 and 1 is 3.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2018/12/14/binarytree.png)
+
+```
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+```
+
+**Example 3:**
+
+```
+Input: root = [1,2], p = 1, q = 2
+Output: 1
+```
+
+ 
+
+**Constraints:**
+
+- The number of nodes in the tree is in the range `[2, 105]`.
+- `-109 <= Node.val <= 109`
+- All `Node.val` are **unique**.
+- `p != q`
+- `p` and `q` will exist in the tree.
+
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        return find(root, p->val, q->val);
+    }
+    TreeNode* find(TreeNode* root, int val1, int val2) {
+        if(root == nullptr) return nullptr;
+        if(root->val == val1 || root->val == val2) {
+            return root;
+        }
+        TreeNode* left = find(root->left, val1, val2);
+        TreeNode* right = find(root->right, val1, val2);
+        if(left != nullptr && right != nullptr) {
+            return root;
+        }
+        return left != nullptr ? left : right;
     }
 };
 ```
