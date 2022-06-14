@@ -523,5 +523,125 @@ Explanation: ".*" means "zero or more (*) of any character (.)".
 - It is guaranteed for each appearance of the character `'*'`, there will be a previous valid character to match.
 
 ```cpp
+class Solution {
+public:
+    map<string, bool> memo;
+    bool isMatch(string s, string p) {
+        return dp(s, 0, p, 0);
+    }
+    bool dp(string s, int i, string p, int j) {
+        int m = s.size();
+        int n = p.size();
+        if(j == n) {
+            return i == m;
+        }
+        if(i == m) {
+            if((n-j) % 2 == 1) {
+                return false;
+            }
+            for(; j + 1 < n; j += 2) {
+                if(p[j+1] != '*') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        string key = to_string(i) + "," + to_string(j);
+        if(memo.count(key)) return memo[key];
+        bool res = false;
+        if(s[i] == p[j] || p[j] == '.') {
+            if(j < n - 1 && p[j+1] == '*') {
+                res = dp(s,i,p,j+2) || dp(s,i+1,p,j);
+            }
+            else {
+                res = dp(s,i+1,p,j+1);
+            }
+        }
+        else {
+            if(j < n-1 && p[j+1] == '*') {
+                res = dp(s,i,p,j+2);
+            }
+            else {
+                res = false;
+            }
+        }
+        memo[key] = res;
+        return res;
+    }
+};
+```
+
+---
+
+### 72. Edit Distance
+
+Given two strings `word1` and `word2`, return *the minimum number of operations required to convert `word1` to `word2`*.
+
+You have the following three operations permitted on a word:
+
+- Insert a character
+- Delete a character
+- Replace a character
+
+ 
+
+**Example 1:**
+
+```
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+```
+
+**Example 2:**
+
+```
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')
+```
+
+ 
+
+**Constraints:**
+
+- `0 <= word1.length, word2.length <= 500`
+- `word1` and `word2` consist of lowercase English letters.
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> memo;
+    int minDistance(string word1, string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        memo.resize(m);
+        for(int i = 0; i < m; i++) {
+            memo[i].resize(n, -1);
+        }
+        return dp(word1, m-1, word2, n-1);
+    }
+  // dp函数定义word1[0,..,i]变为word2[0,..,j]的最短距离
+    int dp(string word1, int i, string word2, int j) {
+        if(i == -1) return j+1;
+        if(j == -1) return i+1;
+        if(memo[i][j] != -1) return memo[i][j];
+        if(word1[i] == word2[j]) {
+            memo[i][j] = dp(word1, i-1, word2, j-1);
+        }
+        else {
+            memo[i][j] = min(dp(word1, i, word2, j-1)+1, min(dp(word1, i-1, word2, j)+1, dp(word1, i-1, word2, j-1) + 1)); // 分别为插入、删除、修改
+        }
+        return memo[i][j];
+    }
+};
 ```
 
